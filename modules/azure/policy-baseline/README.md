@@ -6,7 +6,7 @@ Línea base de Azure Policy con definiciones integradas: regiones permitidas, et
 
 ```hcl
 module "policies" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/policy-baseline?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/policy-baseline?ref=v0.2.0"
 
   management_group_id = azurerm_management_group.workloads.id
   mode                = "audit"

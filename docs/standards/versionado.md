@@ -4,7 +4,7 @@ El repositorio se versiona como un todo con [SemVer](https://semver.org/lang/es/
 y etiquetas `vX.Y.Z`. Los proyectos referencian una etiqueta fija:
 
 ```hcl
-source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/naming?ref=v0.1.0"
+source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/naming?ref=v0.2.0"
 ```
 
 ## Commits

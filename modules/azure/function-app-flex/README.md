@@ -6,7 +6,7 @@ Azure Functions en Flex Consumption (FC1) con el paquete de despliegue leído po
 
 ```hcl
 module "func" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/function-app-flex?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/function-app-flex?ref=v0.2.0"
 
   name                  = module.naming.names.function_app
   service_plan_name     = module.naming.names.service_plan

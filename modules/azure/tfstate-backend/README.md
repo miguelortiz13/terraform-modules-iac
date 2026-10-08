@@ -6,7 +6,7 @@ Backend centralizado de estados: una cuenta con un contenedor por proyecto, RBAC
 
 ```hcl
 module "tfstate" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/tfstate-backend?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/tfstate-backend?ref=v0.2.0"
 
   storage_account_name = "sttfstateplatform01"
   resource_group_name  = module.rg.name

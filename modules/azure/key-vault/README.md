@@ -6,7 +6,7 @@ Key Vault con autorización RBAC, borrado suave y protección de purga.
 
 ```hcl
 module "kv" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/key-vault?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/key-vault?ref=v0.2.0"
 
   name                = module.naming.names.key_vault
   resource_group_name = module.rg.name

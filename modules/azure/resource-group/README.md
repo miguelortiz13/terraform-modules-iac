@@ -6,7 +6,7 @@ Grupo de recursos con bloqueo opcional contra borrados (`CanNotDelete` recomenda
 
 ```hcl
 module "rg" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/resource-group?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/resource-group?ref=v0.2.0"
 
   name       = module.naming.names.resource_group
   location   = "eastus2"

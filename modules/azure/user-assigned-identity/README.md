@@ -6,7 +6,7 @@ Identidad administrada con roles y credenciales federadas OIDC (GitHub Actions s
 
 ```hcl
 module "deploy_identity" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/user-assigned-identity?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/user-assigned-identity?ref=v0.2.0"
 
   name                = "${module.naming.names.user_assigned_identity}-deploy"
   resource_group_name = module.rg.name

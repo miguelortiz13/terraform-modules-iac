@@ -6,7 +6,7 @@ Log Analytics con tope diario de ingesta (dentro de los 5 GB gratis al mes) y Ap
 
 ```hcl
 module "logs" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/log-analytics?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/log-analytics?ref=v0.2.0"
 
   name                      = module.naming.names.log_analytics_workspace
   resource_group_name       = module.rg.name

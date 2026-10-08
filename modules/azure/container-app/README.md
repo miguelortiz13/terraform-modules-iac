@@ -6,7 +6,7 @@ Container App de consumo que escala a cero por defecto, con secretos de Key Vaul
 
 ```hcl
 module "api" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/container-app?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/container-app?ref=v0.2.0"
 
   name                         = "${module.naming.names.container_app}-api"
   resource_group_name          = module.rg.name

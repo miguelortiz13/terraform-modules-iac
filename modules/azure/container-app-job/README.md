@@ -6,7 +6,7 @@ Container Apps Job programado (cron) o manual; solo consume mientras corre.
 
 ```hcl
 module "collector" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/container-app-job?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/container-app-job?ref=v0.2.0"
 
   name                         = module.naming.names.container_app_job
   resource_group_name          = module.rg.name

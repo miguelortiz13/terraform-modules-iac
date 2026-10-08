@@ -6,7 +6,7 @@ Convención de nombres (CAF) y etiquetas estándar. No crea recursos: todos los 
 
 ```hcl
 module "naming" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/naming?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/naming?ref=v0.2.0"
 
   project     = "nexpos"
   environment = "prod"
