@@ -1,0 +1,26 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfplan
+tfplan
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+# Los módulos no fijan lock file: lo fija cada proyecto consumidor.
+.terraform.lock.hcl
+
+# Variables locales con valores reales
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# Editor / SO
+.idea/
+.vscode/
+.DS_Store

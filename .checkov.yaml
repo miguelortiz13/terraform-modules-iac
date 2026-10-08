@@ -1,0 +1,40 @@
+framework:
+  - terraform
+compact: true
+quiet: true
+download-external-modules: false
+
+# Cada excepción está justificada por costo (capa gratuita) o porque el
+# control se resuelve de otra forma. Revisar al subir de presupuesto.
+skip-check:
+  # --- Red privada: los private endpoints cuestan ~USD 7/mes cada uno.
+  #     El acceso se protege con Entra ID + RBAC y TLS 1.2.
+  - CKV_AZURE_59   # Storage sin acceso de red pública
+  - CKV_AZURE_189  # Key Vault sin acceso de red pública
+  - CKV2_AZURE_32  # Key Vault con private endpoint
+  - CKV2_AZURE_33  # Storage con private endpoint
+  - CKV_AZURE_113  # SQL Server sin acceso de red pública
+  - CKV_AZURE_109  # Key Vault con reglas de firewall
+  - CKV_AZURE_35   # Storage con acción de red por defecto Deny
+  # --- Funciones de pago o de otros SKUs.
+  - CKV_AZURE_206  # Storage con replicación geográfica (LRS por costo)
+  - CKV2_AZURE_1   # Storage con CMK (claves de Microsoft bastan)
+  - CKV2_AZURE_18  # Storage con CMK
+  - CKV_AZURE_33   # Storage Queue logging (no se usan colas)
+  - CKV2_AZURE_2   # SQL vulnerability assessment (Defender for SQL, de pago)
+  - CKV2_AZURE_27  # SQL con Entra ID: se cumple con azuread_authentication_only
+  - CKV_AZURE_23   # Auditoría de SQL Server (requiere destino de logs con costo)
+  - CKV_AZURE_24   # Retención de auditoría de SQL
+  - CKV2_AZURE_45  # Microsoft Defender for SQL (de pago)
+  - CKV_AZURE_225  # Function App con redundancia de zona (no disponible en FC1)
+  - CKV_AZURE_212  # Mínimo de instancias para failover (FC1 escala a cero)
+  - CKV_AZURE_211  # Plan de servicio no gratuito
+  - CKV_AZURE_17   # Function App con certificados de cliente
+  - CKV_AZURE_56   # Function App con autenticación integrada (la app gestiona su auth)
+  # --- Logging de lecturas de storage: requiere diagnóstico a Log Analytics
+  #     (costo por GB). Se activa en el proyecto si lo necesita.
+  - CKV2_AZURE_20
+  - CKV2_AZURE_21
+  # --- Key Vault: los secretos y claves los crea cada proyecto con su caducidad.
+  - CKV_AZURE_41
+  - CKV_AZURE_40

@@ -1,0 +1,188 @@
+name: Terraform Azure (reutilizable)
+
+# Pipeline estándar de infraestructura para los proyectos. Uso:
+#
+#   jobs:
+#     infra:
+#       uses: miguelortiz13/terraform-modules-iac/.github/workflows/terraform-azure.yml@v0
+#       with:
+#         working-directory: infra/terraform
+#         environment: prod
+#         state-container: nexpos
+#
+# Requisitos en el repo del proyecto (los crea el repo de plataforma):
+#   - Environment de GitHub `<environment>` con las variables AZURE_CLIENT_ID,
+#     AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID, TFSTATE_RESOURCE_GROUP y
+#     TFSTATE_STORAGE_ACCOUNT. Sin secretos: la autenticación es OIDC.
+#   - Para aplicar en main, protege el environment con revisores obligatorios.
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: Carpeta del root module de Terraform.
+        type: string
+        default: infra/terraform
+      environment:
+        description: Environment de GitHub (dev, qa, prod).
+        type: string
+        required: true
+      state-container:
+        description: Contenedor del proyecto en la cuenta de estados.
+        type: string
+        required: true
+      state-key:
+        description: Nombre del archivo de estado dentro del contenedor.
+        type: string
+        default: terraform.tfstate
+      var-file:
+        description: Archivo .tfvars opcional (relativo a working-directory).
+        type: string
+        default: ""
+      terraform-version:
+        type: string
+        default: 1.16.5
+      apply:
+        description: Aplica el plan. Por defecto solo en push a main.
+        type: boolean
+        default: false
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  plan:
+    name: Plan (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      ARM_USE_OIDC: "true"
+      ARM_USE_AZUREAD: "true"
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    outputs:
+      has-changes: ${{ steps.plan.outputs.exitcode == '2' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ inputs.terraform-version }}
+          terraform_wrapper: false
+
+      - uses: terraform-linters/setup-tflint@v4
+
+      - name: terraform fmt
+        run: terraform fmt -check -recursive -diff
+
+      - name: terraform init
+        run: |
+          terraform init -input=false \
+            -backend-config="resource_group_name=${{ vars.TFSTATE_RESOURCE_GROUP }}" \
+            -backend-config="storage_account_name=${{ vars.TFSTATE_STORAGE_ACCOUNT }}" \
+            -backend-config="container_name=${{ inputs.state-container }}" \
+            -backend-config="key=${{ inputs.state-key }}" \
+            -backend-config="use_azuread_auth=true" \
+            -backend-config="use_oidc=true"
+
+      - name: terraform validate
+        run: terraform validate
+
+      - name: tflint
+        run: |
+          tflint --init
+          tflint --recursive
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: ${{ inputs.working-directory }}
+          framework: terraform
+          soft_fail: ${{ github.event_name == 'pull_request' }}
+
+      - name: terraform plan
+        id: plan
+        run: |
+          set +e
+          terraform plan -input=false -no-color -detailed-exitcode -out=tfplan \
+            ${{ inputs.var-file != '' && format('-var-file={0}', inputs.var-file) || '' }} > plan.txt
+          code=$?
+          cat plan.txt
+          echo "exitcode=$code" >> "$GITHUB_OUTPUT"
+          [ $code -eq 1 ] && exit 1 || exit 0
+
+      - name: Comentar el plan en el PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          WORKDIR: ${{ inputs.working-directory }}
+          ENVIRONMENT: ${{ inputs.environment }}
+        with:
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.WORKDIR}/plan.txt`;
+            let plan = fs.existsSync(path) ? fs.readFileSync(path, 'utf8') : 'Sin salida de plan.';
+            if (plan.length > 60000) plan = plan.slice(0, 60000) + '\n... (truncado)';
+            const marker = `<!-- tf-plan-${process.env.ENVIRONMENT} -->`;
+            const body = `${marker}\n### Terraform plan · \`${process.env.ENVIRONMENT}\`\n\n<details><summary>Ver plan</summary>\n\n\`\`\`hcl\n${plan}\n\`\`\`\n</details>`;
+            const { data: comments } = await github.rest.issues.listComments({ ...context.repo, issue_number: context.issue.number });
+            const prev = comments.find(c => c.body.includes(marker));
+            if (prev) await github.rest.issues.updateComment({ ...context.repo, comment_id: prev.id, body });
+            else await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-${{ inputs.environment }}
+          path: ${{ inputs.working-directory }}/tfplan
+          retention-days: 5
+
+  apply:
+    name: Apply (${{ inputs.environment }})
+    needs: plan
+    if: needs.plan.outputs.has-changes == 'true' && (inputs.apply || (github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)))
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      ARM_USE_OIDC: "true"
+      ARM_USE_AZUREAD: "true"
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ inputs.terraform-version }}
+          terraform_wrapper: false
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: tfplan-${{ inputs.environment }}
+          path: ${{ inputs.working-directory }}
+
+      - name: terraform init
+        run: |
+          terraform init -input=false \
+            -backend-config="resource_group_name=${{ vars.TFSTATE_RESOURCE_GROUP }}" \
+            -backend-config="storage_account_name=${{ vars.TFSTATE_STORAGE_ACCOUNT }}" \
+            -backend-config="container_name=${{ inputs.state-container }}" \
+            -backend-config="key=${{ inputs.state-key }}" \
+            -backend-config="use_azuread_auth=true" \
+            -backend-config="use_oidc=true"
+
+      # Aplica exactamente el plan revisado; si el estado cambió entre medias,
+      # Terraform rechaza el plan obsoleto.
+      - name: terraform apply
+        run: terraform apply -input=false tfplan
