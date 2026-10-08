@@ -4,7 +4,7 @@
 # avisa. Las alertas pronosticadas dan margen para reaccionar antes del cierre.
 
 locals {
-  is_resource_group = can(regex("/resourceGroups/", var.scope_id))
+  is_resource_group = var.scope_type == "resource_group"
 
   notifications = concat(
     [for t in var.actual_thresholds : { threshold = t, type = "Actual" }],
@@ -60,6 +60,11 @@ resource "azurerm_consumption_budget_subscription" "this" {
 
   lifecycle {
     ignore_changes = [time_period]
+
+    precondition {
+      condition     = !can(regex("/resourceGroups/", var.scope_id))
+      error_message = "scope_id es un grupo de recursos: usa scope_type = \"resource_group\"."
+    }
   }
 }
 
@@ -88,5 +93,10 @@ resource "azurerm_consumption_budget_resource_group" "this" {
 
   lifecycle {
     ignore_changes = [time_period]
+
+    precondition {
+      condition     = can(regex("/resourceGroups/", var.scope_id))
+      error_message = "scope_type = \"resource_group\" requiere un scope_id de grupo de recursos."
+    }
   }
 }

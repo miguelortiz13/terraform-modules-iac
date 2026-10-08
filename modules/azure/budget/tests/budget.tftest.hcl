@@ -28,7 +28,8 @@ run "presupuesto_de_grupo" {
   command = plan
 
   variables {
-    scope_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-demo"
+    scope_type = "resource_group"
+    scope_id   = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-demo"
   }
 
   assert {
@@ -45,4 +46,14 @@ run "scope_invalido" {
   }
 
   expect_failures = [var.scope_id]
+}
+
+run "tipo_y_scope_inconsistentes" {
+  command = plan
+
+  variables {
+    scope_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-demo"
+  }
+
+  expect_failures = [azurerm_consumption_budget_subscription.this]
 }

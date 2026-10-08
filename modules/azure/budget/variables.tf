@@ -13,6 +13,17 @@ variable "scope_id" {
   }
 }
 
+variable "scope_type" {
+  description = "`subscription` o `resource_group`. Se declara aparte porque `scope_id` puede no conocerse hasta el apply (p. ej. una suscripción creada en el mismo apply)."
+  type        = string
+  default     = "subscription"
+
+  validation {
+    condition     = contains(["subscription", "resource_group"], var.scope_type)
+    error_message = "scope_type debe ser subscription o resource_group."
+  }
+}
+
 variable "amount" {
   description = "Monto mensual en la moneda de facturación (USD)."
   type        = number

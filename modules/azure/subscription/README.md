@@ -11,7 +11,7 @@ module "sub_nexpos" {
   alias               = "sub-nexpos"
   display_name        = "sub-nexpos"
   billing_scope_id    = var.invoice_section_id
-  management_group_id = azurerm_management_group.workloads.id
+  management_group_name = azurerm_management_group.workloads.name
 }
 ```
 
@@ -43,7 +43,7 @@ module "sub_nexpos" {
 | alias | Alias ARM de la suscripción (identificador estable, sin espacios). Convención: `sub-<proyecto>`. | `string` | n/a | yes |
 | display\_name | Nombre visible de la suscripción. | `string` | n/a | yes |
 | billing\_scope\_id | Sección de factura MCA donde se crea (`/providers/Microsoft.Billing/billingAccounts/.../billingProfiles/.../invoiceSections/...`). Déjalo en null para adoptar una existente con `subscription_id`. | `string` | `null` | no |
-| management\_group\_id | Management group donde se ubica la suscripción (`null` = sin cambiar). | `string` | `null` | no |
+| management\_group\_name | Nombre (no ID) del management group donde se ubica la suscripción, p. ej. `mg-workloads`. `null` = sin cambiar. Se pide el nombre porque se conoce en el plan aunque el grupo se cree en el mismo apply. | `string` | `null` | no |
 | subscription\_id | ID de una suscripción existente para gestionarla (renombrar, etiquetar, ubicar) sin crear una nueva. | `string` | `null` | no |
 | tags | Etiquetas de la suscripción. | `map(string)` | `{}` | no |
 | workload | `Production` o `DevTest`. | `string` | `"Production"` | no |
