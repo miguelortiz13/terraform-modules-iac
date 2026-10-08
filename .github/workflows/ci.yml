@@ -46,12 +46,25 @@ jobs:
         run: terraform fmt -check -recursive -diff
 
       - name: README de módulos al día (terraform-docs)
-        uses: terraform-docs/gh-actions@v1
-        with:
-          find-dir: modules
-          config-file: .terraform-docs.yml
-          output-method: inject
-          fail-on-diff: true
+        env:
+          TFDOCS_VERSION: v0.24.0
+        run: |
+          curl -sSLo /tmp/tfdocs.tgz "https://github.com/terraform-docs/terraform-docs/releases/download/${TFDOCS_VERSION}/terraform-docs-${TFDOCS_VERSION}-linux-amd64.tar.gz"
+          tar -xzf /tmp/tfdocs.tgz -C /tmp terraform-docs
+          for dir in $(find modules -mindepth 3 -maxdepth 3 -name versions.tf -printf '%h\n'); do
+            /tmp/terraform-docs --config .terraform-docs.yml "$dir" > /dev/null
+          done
+          if ! git diff --exit-code -- modules; then
+            echo "::error::README desactualizado: ejecuta terraform-docs ${TFDOCS_VERSION} y confirma los cambios."
+            exit 1
+          fi
+
+      # Antes de Checkov: su contenedor deja results.sarif con dueño root y
+      # Gitleaks ya no puede escribir su reporte.
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkov
         uses: bridgecrewio/checkov-action@v12
@@ -59,10 +72,6 @@ jobs:
           directory: modules
           config_file: .checkov.yaml
 
-      - name: Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   module:
     name: ${{ matrix.module }}
