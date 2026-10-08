@@ -59,16 +59,19 @@ jobs:
             exit 1
           fi
 
+      # Antes de Checkov: su contenedor deja results.sarif con dueño root y
+      # Gitleaks ya no puede escribir su reporte.
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Checkov
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: modules
           config_file: .checkov.yaml
 
-      - name: Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   module:
     name: ${{ matrix.module }}
