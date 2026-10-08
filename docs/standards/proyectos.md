@@ -27,9 +27,9 @@ para que cualquier proyecto se opere igual.
    la plataforma, con autenticación de Entra ID (`use_azuread_auth = true`).
    Nunca estados locales ni claves de cuenta.
 3. **Sin secretos en GitHub**: el pipeline entra con OIDC (identidad federada
-   creada por la plataforma). En el repo solo hay *variables* de environment:
+   creada por la plataforma). En el repo solo hay *variables* (no secretos):
    `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`,
-   `TFSTATE_RESOURCE_GROUP`, `TFSTATE_STORAGE_ACCOUNT`.
+   `TFSTATE_RESOURCE_GROUP`, `TFSTATE_STORAGE_ACCOUNT`, `TFSTATE_CONTAINER`.
 4. **Secretos de la app en Key Vault**, leídos con identidad administrada. Ni en
    `tfvars` ni en variables de entorno en claro.
 5. **Módulos con versión fija** (`?ref=vX.Y.Z`). Actualizar es un PR.
@@ -40,7 +40,7 @@ para que cualquier proyecto se opere igual.
    ignoran cambios de imagen.
 8. **Imágenes en GHCR** (gratis para repos públicos) en lugar de ACR (~USD 5/mes).
 9. **Presupuesto por suscripción** con alerta pronosticada, gestionado por la plataforma.
-10. **Plan en PR, apply en `main`** con el environment de GitHub protegido por aprobación.
+10. **Plan en PR, apply en `main`**: el plan corre sin aprobación; el apply pasa por el environment protegido (aprobación obligatoria, solo rama `main`).
 
 ## Plantilla de `versions.tf`
 
@@ -81,8 +81,7 @@ permissions:
 
 jobs:
   prod:
-    uses: miguelortiz13/terraform-modules-iac/.github/workflows/terraform-azure.yml@v0.1.0
+    uses: miguelortiz13/terraform-modules-iac/.github/workflows/terraform-azure.yml@v0.2.0
     with:
       environment: prod
-      state-container: <proyecto>
 ```

@@ -6,7 +6,7 @@ Entorno de Container Apps solo de consumo: sin costo fijo, Log Analytics y VNet 
 
 ```hcl
 module "cae" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/container-app-environment?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/container-app-environment?ref=v0.2.0"
 
   name                = module.naming.names.container_app_environment
   resource_group_name = module.rg.name

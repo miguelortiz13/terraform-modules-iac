@@ -6,7 +6,7 @@ Azure SQL Database serverless con la oferta gratuita (100.000 vCore-s y 32 GB al
 
 ```hcl
 module "sql" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/mssql-serverless-free?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/mssql-serverless-free?ref=v0.2.0"
 
   server_name         = module.naming.names.mssql_server
   database_name       = module.naming.names.mssql_database

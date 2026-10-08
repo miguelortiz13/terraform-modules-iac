@@ -6,7 +6,7 @@ Presupuesto mensual de suscripción o grupo de recursos, con alertas por gasto r
 
 ```hcl
 module "budget" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/budget?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/budget?ref=v0.2.0"
 
   name           = module.naming.names.budget
   scope_id       = "/subscriptions/${var.subscription_id}"

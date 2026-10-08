@@ -6,7 +6,7 @@ Static Web App (Free por defecto) para frontends SPA, desplegada desde GitHub Ac
 
 ```hcl
 module "web" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/static-web-app?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/static-web-app?ref=v0.2.0"
 
   name                = module.naming.names.static_web_app
   resource_group_name = module.rg.name

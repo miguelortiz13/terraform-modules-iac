@@ -6,7 +6,7 @@ Suscripción como código (alias ARM): crea una nueva en una sección de factura
 
 ```hcl
 module "sub_nexpos" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/subscription?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/subscription?ref=v0.2.0"
 
   alias               = "sub-nexpos"
   display_name        = "sub-nexpos"

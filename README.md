@@ -46,7 +46,7 @@ Fija siempre una versión con `?ref=`:
 
 ```hcl
 module "naming" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/naming?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/naming?ref=v0.2.0"
 
   project     = "nexpos"
   environment = "prod"
@@ -65,10 +65,9 @@ Los proyectos también pueden usar el pipeline estándar de infraestructura
 ```yaml
 jobs:
   infra:
-    uses: miguelortiz13/terraform-modules-iac/.github/workflows/terraform-azure.yml@v0.1.0
+    uses: miguelortiz13/terraform-modules-iac/.github/workflows/terraform-azure.yml@v0.2.0
     with:
       environment: prod
-      state-container: nexpos
 ```
 
 ## Estándares

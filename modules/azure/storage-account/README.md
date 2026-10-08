@@ -6,7 +6,7 @@ Storage account con valores seguros por defecto (TLS 1.2, sin acceso anónimo, s
 
 ```hcl
 module "storage" {
-  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/storage-account?ref=v0.1.0"
+  source = "git::https://github.com/miguelortiz13/terraform-modules-iac.git//modules/azure/storage-account?ref=v0.2.0"
 
   name                = module.naming.names.storage_account
   resource_group_name = module.rg.name
