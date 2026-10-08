@@ -36,8 +36,8 @@ variable "workload" {
   }
 }
 
-variable "management_group_id" {
-  description = "Management group donde se ubica la suscripción (`null` = sin cambiar)."
+variable "management_group_name" {
+  description = "Nombre (no ID) del management group donde se ubica la suscripción, p. ej. `mg-workloads`. `null` = sin cambiar. Se pide el nombre porque se conoce en el plan aunque el grupo se cree en el mismo apply."
   type        = string
   default     = null
 }

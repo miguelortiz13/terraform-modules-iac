@@ -47,6 +47,7 @@ module "budget" {
 | actual\_thresholds | Porcentajes del monto que disparan alerta por gasto real. | `list(number)` | ```[ 80, 100 ]``` | no |
 | forecast\_thresholds | Porcentajes del monto que disparan alerta por gasto pronosticado. Avisan antes de que el gasto ocurra. | `list(number)` | ```[ 100 ]``` | no |
 | resource\_group\_filter | Solo para presupuestos de suscripción: limita el cálculo a estos grupos de recursos. | `list(string)` | `[]` | no |
+| scope\_type | `subscription` o `resource_group`. Se declara aparte porque `scope_id` puede no conocerse hasta el apply (p. ej. una suscripción creada en el mismo apply). | `string` | `"subscription"` | no |
 | start\_date | Inicio del presupuesto (primer día de un mes, RFC3339). Por defecto, el mes en curso cuando se crea; después se ignora para no generar cambios cada mes. | `string` | `null` | no |
 | tag\_filter | Solo para presupuestos de suscripción: limita el cálculo a recursos con estas etiquetas (p. ej. `{ Project = ["nexpos"] }`). | `map(list(string))` | `{}` | no |
 

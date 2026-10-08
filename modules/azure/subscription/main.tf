@@ -23,8 +23,8 @@ resource "azurerm_subscription" "this" {
 }
 
 resource "azurerm_management_group_subscription_association" "this" {
-  count = var.management_group_id == null ? 0 : 1
+  count = var.management_group_name == null ? 0 : 1
 
-  management_group_id = var.management_group_id
+  management_group_id = "/providers/Microsoft.Management/managementGroups/${var.management_group_name}"
   subscription_id     = "/subscriptions/${azurerm_subscription.this.subscription_id}"
 }

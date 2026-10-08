@@ -14,7 +14,7 @@ resource "azurerm_storage_account" "this" {
   https_traffic_only_enabled      = true
   allow_nested_items_to_be_public = false
   shared_access_key_enabled       = var.shared_access_key_enabled
-  public_network_access_enabled   = var.public_network_access_enabled
+  public_network_access           = var.public_network_access_enabled ? "Enabled" : "Disabled"
   default_to_oauth_authentication = true
 
   dynamic "blob_properties" {

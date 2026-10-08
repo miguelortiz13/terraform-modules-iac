@@ -28,13 +28,18 @@ run "adoptar_existente" {
   command = plan
 
   variables {
-    subscription_id     = "00000000-0000-0000-0000-000000000000"
-    management_group_id = "/providers/Microsoft.Management/managementGroups/mg-workloads"
+    subscription_id       = "00000000-0000-0000-0000-000000000000"
+    management_group_name = "mg-workloads"
   }
 
   assert {
     condition     = length(azurerm_management_group_subscription_association.this) == 1
     error_message = "Debe asociar la suscripción al management group."
+  }
+
+  assert {
+    condition     = azurerm_management_group_subscription_association.this[0].management_group_id == "/providers/Microsoft.Management/managementGroups/mg-workloads"
+    error_message = "Debe construir el ID del management group a partir del nombre."
   }
 }
 
