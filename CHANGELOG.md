@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/miguelortiz13/terraform-modules-iac/compare/v0.2.0...v0.3.0) (2026-10-15)
+
+
+### Features
+
+* **aws:** módulos account, scp-baseline y budget para gobierno en AWS ([#10](https://github.com/miguelortiz13/terraform-modules-iac/issues/10)) ([b28ba34](https://github.com/miguelortiz13/terraform-modules-iac/commit/b28ba34113176a172ed1998e57ae0cc0624f8508))
+
 ## [0.2.0](https://github.com/miguelortiz13/terraform-modules-iac/compare/v0.1.0...v0.2.0) (2026-10-08)
 
 
