@@ -4,8 +4,7 @@ Biblioteca de módulos de Terraform reutilizables para todos mis proyectos, con
 estándares comunes de nombres, etiquetas, seguridad, costo y versionado.
 
 Está organizada por proveedor (`modules/<proveedor>/<módulo>`): hoy contiene
-Azure y está preparada para sumar otros (AWS, GitHub, Cloudflare...) con las
-mismas reglas.
+Azure y AWS, y admite sumar otros (GitHub, Cloudflare...) con las mismas reglas.
 
 ## Catálogo
 
@@ -39,6 +38,17 @@ mismas reglas.
 | [`subscription`](modules/azure/subscription) | Crear o adoptar suscripciones y ubicarlas en management groups. |
 | [`policy-baseline`](modules/azure/policy-baseline) | Azure Policy: regiones, etiquetas, SKUs y recursos caros. |
 | [`tfstate-backend`](modules/azure/tfstate-backend) | Backend central de estados con RBAC por proyecto. |
+
+### AWS: plataforma y gobierno
+
+Para proyectos que no caben en Azure (límite de suscripciones): una cuenta
+miembro de Organizations por proyecto, con las mismas protecciones de costo.
+
+| Módulo | Para qué |
+|---|---|
+| [`account`](modules/aws/account) | Cuenta miembro por proyecto, ubicada en una OU. No se cierra al destruir. |
+| [`scp-baseline`](modules/aws/scp-baseline) | SCP: proteger la organización, limitar regiones y tamaños, bloquear servicios caros. |
+| [`budget`](modules/aws/budget) | Presupuesto por cuenta miembro con alertas reales y pronosticadas. |
 
 ## Uso
 
@@ -81,7 +91,7 @@ jobs:
 ## Requisitos
 
 - Terraform >= 1.9 (CI usa 1.16)
-- Proveedores: `azurerm` 5.x, `azapi` 2.x
+- Proveedores: `azurerm` 5.x, `azapi` 2.x, `aws` 6.x
 
 ## Desarrollo
 
