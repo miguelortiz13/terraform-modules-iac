@@ -62,7 +62,7 @@ jobs:
       # Antes de Checkov: su contenedor deja results.sarif con dueño root y
       # Gitleaks ya no puede escribir su reporte.
       - name: Gitleaks
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
