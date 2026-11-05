@@ -4,7 +4,7 @@ Biblioteca de módulos de Terraform reutilizables para todos mis proyectos, con
 estándares comunes de nombres, etiquetas, seguridad, costo y versionado.
 
 Está organizada por proveedor (`modules/<proveedor>/<módulo>`): hoy contiene
-Azure y AWS, y admite sumar otros (GitHub, Cloudflare...) con las mismas reglas.
+Azure, AWS y GitHub, y admite sumar otros (Cloudflare...) con las mismas reglas.
 
 ## Catálogo
 
@@ -50,6 +50,12 @@ miembro de Organizations por proyecto, con las mismas protecciones de costo.
 | [`scp-baseline`](modules/aws/scp-baseline) | SCP: proteger la organización, limitar regiones y tamaños, bloquear servicios caros. |
 | [`budget`](modules/aws/budget) | Presupuesto por cuenta miembro con alertas reales y pronosticadas. |
 
+### GitHub: base de repositorios
+
+| Módulo | Para qué |
+|---|---|
+| [`repository-baseline`](modules/github/repository-baseline) | Alertas y actualizaciones de seguridad de Dependabot y regla de la rama principal (PR obligatorio y checks requeridos). |
+
 ## Uso
 
 Fija siempre una versión con `?ref=`:
@@ -91,7 +97,7 @@ jobs:
 ## Requisitos
 
 - Terraform >= 1.9 (CI usa 1.16)
-- Proveedores: `azurerm` 5.x, `azapi` 2.x, `aws` 6.x
+- Proveedores: `azurerm` 5.x, `azapi` 2.x, `aws` 6.x, `github` 6.x
 
 ## Desarrollo
 
