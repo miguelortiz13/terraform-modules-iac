@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/miguelortiz13/terraform-modules-iac/compare/v0.3.0...v0.4.0) (2026-11-05)
+
+
+### Features
+
+* **github:** módulo repository-baseline (Dependabot y protección de la rama principal) ([#14](https://github.com/miguelortiz13/terraform-modules-iac/issues/14)) ([8663281](https://github.com/miguelortiz13/terraform-modules-iac/commit/8663281fb21cfa4193050ff0bfae1ecdae8e5e7e))
+
 ## [0.3.0](https://github.com/miguelortiz13/terraform-modules-iac/compare/v0.2.0...v0.3.0) (2026-10-15)
 
 
